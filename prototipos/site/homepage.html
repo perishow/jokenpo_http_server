@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Simples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contador {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contador Simples</h1>
+        <div class="contador" id="contador">0</div>
+        <button onclick="incrementar()">+1</button>
+    </div>
+
+    <script>
+        let contador = 0;
+        const elementoContador = document.getElementById('contador');
+        
+        function incrementar() {
+            contador++;
+            elementoContador.textContent = contador;
+            
+            // Efeito visual de animação
+            elementoContador.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                elementoContador.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // Inicializar o contador
+        elementoContador.textContent = contador;
+    </script>
+</body>
+</html>

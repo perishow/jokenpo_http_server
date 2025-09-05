@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Simples</title>
+</head>
+<body>
+    <h1>Formulário de Teste</h1>
+    <p>Clique no botão para enviar uma mensagem ao servidor:</p>
+    
+    <form action="/enviar" method="POST">
+        <input type="hidden" name="mensagem" value="Olá servidor! Mensagem enviada pelo botão.">
+        <button type="submit">Enviar Mensagem</button>
+    </form>
+    
+    <hr>
+    
+    <h2>Formulário com Campo de Texto</h2>
+    <form action="" method="POST">
+        <label for="nome">Digite sua mensagem:</label><br>
+        <input type="text" id="mensagem" name="mensagem" placeholder="Digite aqui..."><br><br>
+        <button type="submit">Enviar Mensagem Personalizada</button>
+    </form>
+    
+    <hr>
+    
+    <h2>Status:</h2>
+    <div id="status">Nenhuma mensagem enviada ainda</div>
+    
+    <script>
+        // Script simples para mostrar o status após o envio
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function() {
+                document.getElementById('status').textContent = 'Mensagem enviada! Aguardando resposta...';
+            });
+        });
+    </script>
+</body>
+</html>

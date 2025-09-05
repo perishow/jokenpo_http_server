@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedra, Papel e Tesoura - Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .opcoes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .opcao {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .opcao input[type="radio"] {
+            display: none;
+        }
+        
+        .opcao label {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .opcao input[type="radio"]:checked + label {
+            border-color: #4CAF50;
+            background-color: #e8f5e8;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .opcao span {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .btn-jogar {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-jogar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-jogar:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Pedra, Papel e Tesoura</h1>
+        
+        <form id="jogoForm">
+            <div class="form-group">
+                <div class="opcoes">
+                    <div class="opcao">
+                        <input type="radio" id="pedra" name="jogada" value="pedra">
+                        <label for="pedra">✊</label>
+                        <span>Pedra</span>
+                    </div>
+                    
+                    <div class="opcao">
+                        <input type="radio" id="papel" name="jogada" value="papel">
+                        <label for="papel">✋</label>
+                        <span>Papel</span>
+                    </div>
+                    
+                    <div class="opcao">
+                        <input type="radio" id="tesoura" name="jogada" value="tesoura">
+                        <label for="tesoura">✌️</label>
+                        <span>Tesoura</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-jogar" id="btnEnviar" disabled>Enviar para o Servidor</button>
+        </form>
+        
+        <div id="resultado"></div>
+        
+        <!-- Debug info -->
+        <div style="margin-top: 20px; font-size: 12px; color: #666;">
+            <p id="debugInfo">Status: Aguardando seleção</p>
+        </div>
+    </div>
+
+    <script>
+        // Debug: verificar se o script carregou
+        console.log('Script carregado!');
+        
+        const form = document.getElementById('jogoForm');
+        const botoes = document.querySelectorAll('input[name="jogada"]');
+        const btnJogar = document.getElementById('btnEnviar');
+        const resultadoDiv = document.getElementById('resultado');
+        const debugInfo = document.getElementById('debugInfo');
+
+        // Debug: verificar elementos
+        console.log('Form:', form);
+        console.log('Botões:', botoes.length);
+        console.log('Btn jogar:', btnJogar);
+
+        // Habilitar botão quando uma opção for selecionada
+        botoes.forEach(botao => {
+            botao.addEventListener('change', () => {
+                console.log('Opção selecionada:', botao.value);
+                btnJogar.disabled = false;
+                debugInfo.textContent = 'Status: Pronto para enviar';
+            });
+        });
+
+        // Processar o formulário
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Formulário enviado');
+            
+            const jogada = document.querySelector('input[name="jogada"]:checked');
+            
+            if (!jogada) {
+                alert('Por favor, selecione uma opção primeiro!');
+                return;
+            }
+            
+            debugInfo.textContent = 'Status: Enviando...';
+            mostrarMensagem('Enviando para o servidor...', 'loading');
+            
+            try {
+                const response = await enviarParaServidor(jogada.value);
+                console.log('Resposta do servidor:', response);
+                mostrarMensagem('✅ Enviado com sucesso! Resposta: ' + JSON.stringify(response), 'success');
+                debugInfo.textContent = 'Status: Sucesso';
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('❌ Erro: ' + error.message, 'error');
+                debugInfo.textContent = 'Status: Erro - ' + error.message;
+                btnJogar.disabled = false;
+            }
+        });
+
+        async function enviarParaServidor(jogada) {
+            // URL alternativa para teste sem servidor
+            const url = 'http://localhost:8080/jogar';
+            
+            // Para teste SEM servidor, descomente a linha abaixo:
+            // throw new Error('Servidor não encontrado. Execute o servidor Python primeiro.');
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    escolha: jogada,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            return await response.json();
+        }
+
+        function mostrarMensagem(mensagem, tipo) {
+            resultadoDiv.innerHTML = `<div class="${tipo}">${mensagem}</div>`;
+            resultadoDiv.style.display = 'block';
+        }
+
+        // Debug: verificar eventos
+        console.log('Event listeners configurados');
+    </script>
+</body>
+</html>

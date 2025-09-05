@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forms namoral</title>
+</head>
+
+<style>
+.game-form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #3498db;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: Arial, sans-serif;
+}
+
+.game-form h3 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.choice {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.choice:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.choice input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.choice span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(238, 90, 36, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+</style>
+
+<body>
+<div class="game-form">
+    <form method="post" action="/jogar">
+        <h3>Escolha sua jogada:</h3>
+        
+        <div class="choices">
+            <label class="choice">
+                <input type="radio" name="jogada" value="pedra" required>
+                <span>🗿 Pedra</span>
+            </label>
+            
+            <label class="choice">
+                <input type="radio" name="jogada" value="papel" required>
+                <span>📄 Papel</span>
+            </label>
+            
+            <label class="choice">
+                <input type="radio" name="jogada" value="tesoura" required>
+                <span>✂️ Tesoura</span>
+            </label>
+        </div>
+        
+        <button type="submit" class="submit-btn">
+            🎯 Enviar Jogada
+        </button>
+    </form>
+</div>
+</body>

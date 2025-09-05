@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Sem Redirecionamento</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        
+        h2 {
+            color: #5a67d8;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #6e8efb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #cbd5e0, transparent);
+            margin: 30px 0;
+        }
+        
+        #status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .waiting {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            color: #d97706;
+        }
+        
+        .success {
+            background-color: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #15803d;
+        }
+        
+        .error {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        
+        .response {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #6e8efb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 12px;
+            background-color: #f1f5f9;
+            border-radius: 6px;
+        }
+        
+        .timestamp {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulário de Teste</h1>
+        <p>Clique no botão para enviar uma mensagem ao servidor sem sair da página:</p>
+        
+        <div class="form-group">
+            <form id="form1">
+                <input type="hidden" name="mensagem" value="Olá servidor! Mensagem enviada pelo botão.">
+                <button type="submit">Enviar Mensagem</button>
+            </form>
+        </div>
+        
+        <hr>
+        
+        <h2>Formulário com Campo de Texto</h2>
+        <div class="form-group">
+            <form id="form2">
+                <label for="mensagem">Digite sua mensagem:</label>
+                <input type="text" id="mensagem" name="mensagem" placeholder="Digite aqui...">
+                <br><br>
+                <button type="submit">Enviar Mensagem Personalizada</button>
+            </form>
+        </div>
+        
+        <hr>
+        
+        <h2>Status:</h2>
+        <div id="status">Nenhuma mensagem enviada ainda</div>
+        
+        <div id="response" class="response hidden">
+            <h2>Resposta do Servidor:</h2>
+            <div id="responseContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar status com diferentes cores
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+        }
+
+        // Função para mostrar a resposta do servidor
+        function showResponse(response) {
+            const responseDiv = document.getElementById('response');
+            const responseContent = document.getElementById('responseContent');
+            
+            // Criar elemento de mensagem
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            // Adicionar conteúdo
+            messageDiv.innerHTML = `
+                <div><strong>Mensagem recebida:</strong> ${response.mensagem || 'Nenhuma mensagem'}</div>
+                <div><strong>Status:</strong> ${response.status}</div>
+                <div class="timestamp">${new Date().toLocaleString()}</div>
+            `;
+            
+            // Adicionar à resposta
+            responseContent.prepend(messageDiv);
+            responseDiv.classList.remove('hidden');
+        }
+
+        // Adicionar event listeners aos formulários
+        document.getElementById('form1').addEventListener('submit', function(e) {
+            e.preventDefault(); // Impede o envio tradicional do formulário
+            
+            showStatus('Mensagem enviada! Aguardando resposta...', 'waiting');
+            
+            // Simular envio AJAX (substitua por uma chamada fetch real se necessário)
+            setTimeout(() => {
+                showStatus('Mensagem recebida com sucesso!', 'success');
+                
+                // Simular resposta do servidor
+                showResponse({
+                    mensagem: "Olá servidor! Mensagem enviada pelo botão.",
+                    status: "Sucesso - Mensagem recebida"
+                });
+            }, 1500);
+        });
+
+        document.getElementById('form2').addEventListener('submit', function(e) {
+            e.preventDefault(); // Impede o envio tradicional do formulário
+            
+            const messageInput = document.getElementById('mensagem');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                showStatus('Por favor, digite uma mensagem antes de enviar.', 'error');
+                return;
+            }
+            
+            showStatus('Mensagem personalizada enviada! Aguardando resposta...', 'waiting');
+            
+            // Simular envio AJAX (substitua por uma chamada fetch real se necessário)
+            setTimeout(() => {
+                showStatus('Mensagem personalizada recebida com sucesso!', 'success');
+                
+                // Simular resposta do servidor
+                showResponse({
+                    mensagem: message,
+                    status: "Sucesso - Mensagem personalizada recebida"
+                });
+                
+                // Limpar o campo de texto
+                messageInput.value = '';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

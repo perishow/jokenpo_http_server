@@ -1,0 +1,27 @@
+Explicação das principais funções do modulo "socket"
+
+1. socket(address_family, sock_type) 
+	- Instancia um objeto socket.
+	- Recebe argumentos para configurar a familia de endereços e o tipo do socket
+	- obs: socket.socket(socket.AF_INET, socket.SOCK_STREAM) define um socket com familia de endereços IPv4 (socket.AF_INET) e tipo TCP (socket.SOCK_STREAM). 
+	
+2. .bind((HOST, PORT))
+	- Associa o socket a uma interface de rede e porta específica.
+	- Recebe a tupla (HOST, PORT) como argumento no caso do socket TCP - IPv4.
+	
+3. .listen()
+	- Permite que o socket aceite conexões (torna ele um socket de escuta).
+	- Têm um parametro de backlog que especifica o número de conexões que o sistema permitirá antes de começar a recusar conexões.
+	
+4. accept()
+	- Bloqueia a execução e fica aguardando alguma conexão.
+	- Quando um cliente se conecta, retorna um socket representando a conexão e uma tupla contendo o endereço do cliente (no caso de ser IPv4 a tupla contém (HOST, PORT)).
+	
+------------------------------------------------------------------------------------------------------
+#OBSERVAÇÃO DE FUNCIONAMENTO 
+- O socket criado pelo método .accept() é importante pois o socket que será usado para se comunicar com o cliente é distinto do socket usado na conexão. Isso é importante pois o socket de escuta deve continuar a escutar por conexões enquanto o socket específico do metodo .accept() deve se comunicar com o seu respectivo cliente.
+------------------------------------------------------------------------------------------------------
+
+5. .recv(int)
+	- Retorna um numero int de bytes recebidos
+	- Como recebe um objeto do tipo bytes, pode ser traduzido para ascii usando o formato 
