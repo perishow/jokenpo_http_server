@@ -9,7 +9,7 @@ arquivo = r.read()
 r.close()
 
 # define o endereço e a porta onde o nosso servidor vai operar 
-endereço = 'localhost'
+endereço = '192.168.1.13'
 porta = 8000
 
 # formata mensagem de resposta HTTP
