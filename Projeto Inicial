@@ -1,0 +1,57 @@
+# Esse é o projeto inicial que descreve o que o sistema deve fazer e uma ideia dos detalhes de implementação. 
+obs: Esse documento não é exatamente uma documentação do projeto mas servirá de guia durante o desenvolvimento da aplicação.
+
+# O que é esse projeto:
+Esse projeto consiste em um servidor HTTP que hospeda um jogo de jokenpo online que você pode jogar contra outra pessoa na mesma rede LAN.
+
+# Requisitos:
+1 - O servidor deve se comunicar usando protocolo HTTP;
+2 - Dois clientes devem poder se comunicar simultâneamente com o servidor;
+3 - O servidor deve receber uma das três respostas: pedra, papel ou tesoura, oriundos dos clientes;
+4 - O servidor deve processar as respostas dos dois jogadores e determinar o jogador;
+5 - O servidor deve gerar um HTML informando o vencedor e enviar aos jogadores;
+
+# Sequência de telas (perspectiva do usuário)
+1 - Tela inicial: 
+	Uma tela contendo o nome do jogo e um botão de "jogar". Após o cliente apertar no botão "jogar", um throbber e uma mensagem de "aguardando outro jogador" deve ser exibida.
+
+2 - Tela de jogo:
+	Uma tela contendo um form html com três opções: pedra, papel ou tesoura, e um botão de "confirmar escolha". Após o jogador escolher uma das três opções e apertar no botão, um throbber e uma mensagem de "aguardando jogada do outro jogador" devem ser exibidas.
+	
+3 - Tela de Resultado:
+	Uma tela contendo as informações finais do jogo: Quais foram as jogadas e quem ganhou o jogo. Além disso a tela deve conter um botão de "jogar de novo" que redireciona para a tela inicial novamente.
+	
+# Tecnologias provaveis de serem utilizadas:
+Linguagem de programação: Python 3.12.3
+Interface de Usuário: HTML e CSS 
+Entrega dos HTML: sockets python e protocolo HTTP.
+Coleta das respostas: sockets python e threading para garantir a concorrência.
+
+# Pseudo-Código do Sistema:
+
+Server:
+	Cria um socket;  
+	Liga o socket ao endereço e porta do server; (ip_da_maquina:qualquerporta)
+	Ativa o modo de escuta do socket;
+	Fica escutando;
+	Quando receber requisição, coleta o ip e o socket criados e associa a um jogador; 
+	Cria uma thread para cada jogador que vai aguardar a requisição POST do vinda do jogador e salvar a jogada;
+	O server aguarda os dois jogadores jogarem;
+	-----
+	Após os dois jogarem, o server insere as jogadas na função de jogo que deve retornar quem venceu;
+	A partir de quem venceu, um HTML é gerado informando quem venceu e quais foram as jogadas;
+	-----
+	O server envia o HTML aos clientes como resposta à requisição POST que eles enviaram nas jogadas;
+	FIM
+	
+	obs: a parte marcada entre o pontilhado (----) pode ser encapsulado em um objeto "JogoJKP" que pode criar jogador a partir do ip e socket, executar a lógica do jogo e gerar o HTML.
+	
+JogoJKP:
+	-- Ainda não pensei --
+
+
+
+
+
+
+
