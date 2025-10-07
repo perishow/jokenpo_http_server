@@ -34,17 +34,16 @@ try:
 		while len(usuarios_ativos.keys()) < 2:
 			new_sock , addr = s.accept()
 			ip, door = addr
-			if ip not in usuarios_ativos:
-				#usuarios_ativos[ip]= threading.Thread(target=receber_forms, args=(ip, new_sock))
+			if ip not in usuarios_ativos:				
 				usuarios_ativos[ip] = new_sock
 				print(f"usuarios ativos: {usuarios_ativos.keys()}")
 				print(f"tamanho usuarios ativos: {len(usuarios_ativos.keys())}")
-		# loop que inicia o jogo
+		# inicio do jogo
 		print("buffer cheio, iniciando jogo!")
 		
 		# loop que envia o formulario para os jogadores
 		for ip in usuarios_ativos.keys():
-			usuarios_ativos[ip].sendall(msg_resposta.encode()) # envia um get para receber o formulario
+			usuarios_ativos[ip].sendall(msg_resposta.encode()) # envia o formulario para os clientes
 		
 		# loop que recebe as jogadas
 		n_jogadas = 0
@@ -64,15 +63,18 @@ try:
 			if data_split[0] == 'POST':
 				print(f"jogada de {ip} = \n{data_ascii}")
 				ip, _ = addr
-				jogadas[ip] = data_split[-1].split('=')[1]
+				jogadas[ip] = data_split[-1].split('=')[1] 
 				n_jogadas += 1
-				ip, _ = addr
 				usuarios_ativos[ip] = new_sock
 		print(jogadas)
 		
-		#loop que envia o html de obrigado meu deus vamo nessa porra 
+		# Aqui entra o calculo de quem ganhou e quem perdeu
+		# 
+		# Aqui deve ser gerado o HTML mostrando se ganhou ou perdeu e quais as jogadas
+		
+		# loop que envia o html de obrigado meu deus vamo nessa porra 
 		#
-		# calcula quem ganhou e faz os html direitinho
+		# 
 		#
 		
 		for ip in usuarios_ativos:
