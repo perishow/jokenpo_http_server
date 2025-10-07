@@ -1,14 +1,16 @@
 import socket
 import time
 
-endereço = '192.168.1.13'
+endereço = '192.168.1.11'
 porta = 8080
 
 reader = open('site/form_namoral.html','r')
 arquivo = reader.read()
+reader.close()
 
 reader2 = open('site/obrigado.html','r')
 arquivo2 = reader2.read()
+reader2.close()
 
 tamanho_arquivo = str(len(arquivo))
 tamanho_arquivo2 = str(len(arquivo2))
@@ -19,6 +21,8 @@ msg_resposta2 = (f'HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/ht
 
 usuarios_ativos = {} # {key: ip, value: socket 
 jogadas = {} # {key: ip, value: jogada}  
+
+#---------------------------------------------------------------------------------------------------
 
 try:
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -73,9 +77,8 @@ try:
 		
 		for ip in usuarios_ativos:
 			usuarios_ativos[ip].sendall(msg_resposta2.encode())
-		
+# obs : atualmente o servidor fecha quando o jogo termina
 			
 except Exception as e:
 	print(f"Erro: {e}")
-	reader.close()
-	reader2.close()
+
