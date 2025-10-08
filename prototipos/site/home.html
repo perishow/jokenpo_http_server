@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jokenpô</title>
     <style>
+        /* Seus estilos existentes permanecem iguais */
         * {
             margin: 0;
             padding: 0;
@@ -78,6 +79,10 @@
             letter-spacing: 4px;
             position: relative;
             overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
         .play-button::before {
@@ -98,14 +103,35 @@
             height: 300px;
         }
 
-        .play-button:hover {
+        .play-button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        .play-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
         }
 
         .play-button span {
             position: relative;
             z-index: 1;
+        }
+
+        /* Spinner styles */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(10, 10, 10, 0.3);
+            border-top: 2px solid #0a0a0a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .credits {
@@ -178,8 +204,9 @@
         <h1>JOKENPÔ</h1>
         <p class="subtitle">Pedra · Papel · Tesoura</p>
         
-        <button class="play-button" onclick="window.location.href = 'site/jogo.html'">
-            <span>JOGAR</span>
+        <button class="play-button" id="playButton">
+            <span id="buttonText">JOGAR</span>
+            <div class="spinner" id="spinner"></div>
         </button>
     </div>
 
@@ -194,10 +221,21 @@
     </div>
 
     <script>
-        function startGame() {
-            alert('Iniciando o jogo! 🎮');
-            window.location.href = 'jogo.html';
-        }
+        document.getElementById('playButton').addEventListener('click', function() {
+            const button = this;
+            const buttonText = document.getElementById('buttonText');
+            const spinner = document.getElementById('spinner');
+            
+            // Mostra o spinner e muda o texto
+            buttonText.textContent = 'CARREGANDO...';
+            spinner.style.display = 'block';
+            button.disabled = true;
+            
+            // Simula um tempo de carregamento antes de redirecionar
+            setTimeout(() => {
+                window.location.href = 'site/jogo.html';
+            }, 1500); // 1.5 segundos de loading
+        });
     </script>
 </body>
 </html>
