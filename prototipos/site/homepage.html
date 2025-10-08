@@ -1,79 +1,77 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contador Simples</title>
+    <title>Jokenpo</title>
     <style>
+        
+{
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;}
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        
-        .container {
+            flex-direction: column;
+            color: #fff;
             text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        .contador {
-            font-size: 48px;
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .play-button {
+            padding: 20px 50px;
+            font-size: 1.5em;
             font-weight: bold;
-            color: #333;
-            margin: 20px 0;
-        }
-        
-        button {
+            border: none;
+            border-radius: 10px;
             background-color: #4CAF50;
             color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: 0.3s ease;
+            margin-top: 20px;
         }
-        
-        button:hover {
+
+        .play-button:hover {
             background-color: #45a049;
+            transform: scale(1.05);
         }
-        
-        button:active {
-            transform: scale(0.98);
+
+        .info {
+            margin-top: 40px;
+            font-size: 1.1em;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9em;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Contador Simples</h1>
-        <div class="contador" id="contador">0</div>
-        <button onclick="incrementar()">+1</button>
+    <h1>Jokenpo</h1>
+    <button class="play-button" onclick="window.location.href='site/formulario.html'">JOGAR</button>
+
+    <div class="info">
+        <p><strong>Desenvolvedores:</strong></p>
+        <p>Giulia Buonafina, Peri Macedo, Bernardo Braga</p>
+        <p><strong>Disciplina:</strong> Redes de Computadores</p>
     </div>
 
-    <script>
-        let contador = 0;
-        const elementoContador = document.getElementById('contador');
-        
-        function incrementar() {
-            contador++;
-            elementoContador.textContent = contador;
-            
-            // Efeito visual de animação
-            elementoContador.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                elementoContador.style.transform = 'scale(1)';
-            }, 100);
-        }
-        
-        // Inicializar o contador
-        elementoContador.textContent = contador;
-    </script>
+    <footer>
+        © 2025 - Nosso Jogo de Jokenpo
+    </footer>
 </body>
 </html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jokenpô</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(74, 86, 226, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .icon-group {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            letter-spacing: 20px;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 12px;
+            background: linear-gradient(135deg, #fff 0%, #a8a8a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 70px;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .play-button {
+            background: #fff;
+            color: #0a0a0a;
+            border: 2px solid #fff;
+            padding: 20px 80px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .play-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        .play-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .credits {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .credits-title {
+            font-size: 0.75rem;
+            color: #444;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .developers {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .discipline {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container > * {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .icon-group {
+            animation-delay: 0.1s;
+        }
+
+        h1 {
+            animation-delay: 0.2s;
+        }
+
+        .subtitle {
+            animation-delay: 0.3s;
+        }
+
+        .play-button {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <div class="icon-group">✊✋✌️</div>
+        <h1>JOKENPÔ</h1>
+        <p class="subtitle">Pedra · Papel · Tesoura</p>
+        
+        <button class="play-button" onclick="window.location.href = 'site/jogo.html'">
+            <span>JOGAR</span>
+        </button>
+    </div>
+
+    <div class="credits">
+        <div class="credits-title">Desenvolvedores</div>
+        <div class="developers">
+            Giulia Buonafina<br>
+            Peri Macedo<br>
+            Bernardo Braga
+        </div>
+        <div class="discipline">Redes de Computadores</div>
+    </div>
+
+    <script>
+        function startGame() {
+            alert('Iniciando o jogo! 🎮');
+            window.location.href = 'jogo.html';
+        }
+    </script>
+</body>
+</html>
