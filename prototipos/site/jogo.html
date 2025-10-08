@@ -156,15 +156,61 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .submit-btn:hover {
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(255,255,255,0.2);
         }
 
-        .submit-btn:active {
-            transform: translateY(0);
+        .submit-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .submit-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Spinner styles */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(10, 10, 10, 0.3);
+            border-top: 2px solid #0a0a0a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .credits {
@@ -237,7 +283,7 @@
         <h1>JOKENPÔ</h1>
         <p class="subtitle">Escolha sua jogada</p>
         
-        <form method="post" action="/jogar">
+        <form method="post" action="/jogar" id="gameForm">
             <div class="choices">
                 <label class="choice">
                     <input type="radio" name="jogada" value="pedra" required>
@@ -258,9 +304,50 @@
                 </label>
             </div>
             
-            <button type="submit" class="submit-btn">Enviar Jogada</button>
+            <button type="submit" class="submit-btn" id="submitButton">
+                <span id="buttonText">Enviar Jogada</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
         </form>
     </div>
+
+    <div class="credits">
+        <div class="credits-title">Desenvolvedores</div>
+        <div class="developers">
+            Giulia Buonafina<br>
+            Peri Macedo<br>
+            Bernardo Braga
+        </div>
+        <div class="discipline">Redes de Computadores</div>
     </div>
+
+    <script>
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Impede o envio real para demonstração
+            
+            const button = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+            const spinner = document.getElementById('spinner');
+            
+            // Mostra o spinner e muda o texto
+            buttonText.textContent = 'ENVIANDO...';
+            spinner.style.display = 'block';
+            button.disabled = true;
+            
+            // Simula um tempo de carregamento antes de redirecionar
+            setTimeout(() => {
+                // Aqui você pode redirecionar para a página de resultado
+                // window.location.href = 'resultado.html';
+                
+                // Para demonstração, vamos apenas resetar o botão
+                buttonText.textContent = 'Enviar Jogada';
+                spinner.style.display = 'none';
+                button.disabled = false;
+                
+                // Mostra um alerta informando que a jogada foi enviada
+                alert('Jogada enviada com sucesso!');
+            }, 1500); // 1.5 segundos de loading
+        });
+    </script>
 </body>
 </html>

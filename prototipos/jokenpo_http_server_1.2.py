@@ -1,7 +1,12 @@
 import socket
 
+# ---------------------------
+# Setup
+# ---------------------------
+
+# Define o endereço e a porta onde o servidor escuta
 endereço = '192.168.1.11'
-porta = 8080
+porta = 8000
 
 
 # Lê os HTMLs
@@ -11,10 +16,8 @@ with open('site/home.html', 'r', encoding='utf-8') as f:
 with open('site/jogo.html', 'r', encoding='utf-8') as f:
 	arquivo = f.read()
 
-with open('site/obrigado.html', 'r', encoding='utf-8') as f:
-	arquivo2 = f.read()
-
-msg_reposta_home = (
+# Formata as mensagens HTTP
+msg_resposta_home = (
 	f'HTTP/1.1 200 OK\r\n'
 	f'Connection: close\r\n'
 	f'Content-Type: text/html\r\n'
@@ -22,7 +25,7 @@ msg_reposta_home = (
 	f'{arquivo_home}'
 )
 
-msg_resposta = (
+msg_resposta_jogo = (
 	f'HTTP/1.1 200 OK\r\n'
 	f'Connection: close\r\n'
 	f'Content-Type: text/html\r\n'
@@ -30,18 +33,11 @@ msg_resposta = (
 	f'{arquivo}'
 )
 
-msg_resposta2 = (
-	f'HTTP/1.1 200 OK\r\n'
-	f'Connection: close\r\n'
-	f'Content-Type: text/html\r\n'
-	f'Content-Length: {len(arquivo2)}\r\n\r\n'
-	f'{arquivo2}'
-)
+# Define as estruturas de dados para o funcionamento do jogo
+usuarios_ativos = {}        # {ip: socket}
+jogadas = {}                # {ip: jogada}
 
-usuarios_ativos = {}
-jogadas = {}
-
-
+# Função responsável por determinar quem ganhou
 def calcular_vencedor(jogadas):
 	# jogadas é um dicionário: {ip1: "pedra", ip2: "tesoura"}
 	ips = list(jogadas.keys())
@@ -50,9 +46,9 @@ def calcular_vencedor(jogadas):
 	# regras: o que vence o que
 	regras = {"pedra": "tesoura", "tesoura": "papel", "papel": "pedra"}
 
-	# se jogador 1 ganhar do jogador 2, resultado = 1
-	# se jogador 2 ganhar do jogador 1, resultado = 2
-	# se empate, resultado = 0
+	# se jogador 1 ganhar do jogador 2, resultado = 0
+	# se jogador 2 ganhar do jogador 1, resultado = 1
+	# se empate, resultado = 2
 	if jog1 == jog2:
 		resultado = 2
 	elif regras[jog1] == jog2:
@@ -62,6 +58,7 @@ def calcular_vencedor(jogadas):
 
 	return resultado
 
+# Função responsável por converter as jogadas em emojis 
 def jogada_to_emoji(jogada):
 	if jogada == 'pedra':
 		return '🪨️'
@@ -70,6 +67,7 @@ def jogada_to_emoji(jogada):
 	elif jogada == 'tesoura':
 		return '✂️'
 
+# Função responsável por gerar os HTML de resultado
 def gerar_html_resultado(resultado, jogadas, identificador):
     identificador_oponente = None
     if identificador == 0:
@@ -370,14 +368,15 @@ def gerar_html_resultado(resultado, jogadas, identificador):
     
     return html
 
+# Função responável pela operação do jogo
 def jogo():
 	n_jogadas = 0
 	while n_jogadas < 2:
-		new_sock, addr = s.accept()
-		print(f"recebendo dados de {addr}:")
+		new_sock, addr = s.accept()             
 		data = new_sock.recv(1024)
 		data_ascii = data.decode('ascii')
 		data_split = data_ascii.split()
+		# Intepreta a requisição POST
 		if data_split[0] == 'POST':
 			print(f"jogada de {addr[0]} = \n{data_ascii}")
 			ip, _ = addr
@@ -385,12 +384,12 @@ def jogo():
 			n_jogadas += 1
 			usuarios_ativos[ip] = new_sock
 
-	print(jogadas)
 
 	# Aqui entra o calculo de quem ganhou e quem perdeu
 	
 	resultado = calcular_vencedor(jogadas) 
 	
+    # Geração dos HTML de resultado e das mensagens HTTP individuais
 	html_resultado_1 = gerar_html_resultado(resultado, jogadas, 0)
 	msg_http_resultado_1 = (
 		f'HTTP/1.1 200 OK\r\n'
@@ -417,7 +416,6 @@ def jogo():
 			usuarios_ativos[ip].sendall(msg_http_resultado_1.encode('utf-8'))
 		else:
 			usuarios_ativos[ip].sendall(msg_http_resultado_2.encode('utf-8'))
-	# obs : atualmente o servidor fecha quando o jogo termina
 
 # ---------------------------
 # Servidor
@@ -431,47 +429,27 @@ try:
 	
  		# FASE DE ESPERA	
 		while True:
-			new_sock, addr = s.accept()
-			data = new_sock.recv(1024)
-			data_ascii = data.decode('ascii')		# requisição http GET ...
-			data_splited = data_ascii.split()
-			#print(data_ascii)
+			new_sock, addr = s.accept()             # fica preso aguardando requisições
+			data = new_sock.recv(1024)              # recebe e armazena os dados enviados pelo cliente
+			data_ascii = data.decode('ascii')		# decodificação dos dados
+			data_splited = data_ascii.split()       
+			
+            # Interpretação da requisição
 			if data_splited[0] == "GET" and data_splited[1] == '/':
-				new_sock.sendall(msg_reposta_home.encode())
+				new_sock.sendall(msg_resposta_home.encode())
 			elif data_splited[0] == "GET" and data_splited[1] == '/site/jogo.html':
-				#print ("entrou no elif")
-				#new_sock, addr = s.accept()
-				ip, door = addr
+				ip, door = addr              
 				if ip not in usuarios_ativos:
 					usuarios_ativos[ip] = new_sock 
-					#print(f"Usuários ativos: {usuarios_ativos.keys()}")
-					print(f"Tamanho usuários ativos: {len(usuarios_ativos.keys())}")
+					print(f"Usuarios online: {len(usuarios_ativos.keys())}")
 			# FIM DA FASE DE ESPERA
 					if len(usuarios_ativos) == 2:
-						print("começando o jogo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+						print("começando o jogo!!!")
 						for ip in usuarios_ativos.keys():
-							usuarios_ativos[ip].sendall(msg_resposta.encode())  # envia o formulário
+							usuarios_ativos[ip].sendall(msg_resposta_jogo.encode())  # envia mensagem http contendo o jogo
 						jogo()	
 						usuarios_ativos = {}
 						jogadas = {}
-# FIM DO WHILE	
-	
-		
-		# Espera os 2 jogadores (GET)
-		#while len(usuarios_ativos) < 2:
-		#	new_sock, addr = s.accept()
-		#	ip, door = addr
-		#	if ip not in usuarios_ativos:
-		#		usuarios_ativos[ip] = new_sock
-		#		print(f"Usuários ativos: {usuarios_ativos.keys()}")
-		#		print(f"Tamanho usuários ativos: {len(usuarios_ativos.keys())}")
-		
-		# INICIO DO JOGO#######################################################
-		
-		# Loop que envia o formulário para os jogadores
-#		for ip in usuarios_ativos.keys():
-#			usuarios_ativos[ip].sendall(msg_resposta.encode())  # envia o formulário
-
 
 except Exception as e:
 	print(f"Erro: {e}")
